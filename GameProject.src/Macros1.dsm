@@ -1,0 +1,64 @@
+Sub Application_BeforeBuildStart
+
+dim oDoc
+dim sBuild
+dim sRCFile
+dim sOne
+dim sTwo
+dim iSelect
+dim lLineNbr
+dim bFound
+
+'путь к .rc2 файлу
+sRCFile = "Res.rc2"
+
+'открыть *.rc2 как текст
+set oDoc = Documents.Open(sRCFile, "Text")
+
+'ищем информаци€ о версии
+oDoc.Selection.FindText " FILEVERSION", dsMatchCase
+'сохран€ем номер строки
+lLineNbr = oDoc.Selection.CurrentLine
+
+sOne = "[0-9]+,[0-9]+,[0-9]+,"
+
+'ищем номер версии
+oDoc.Selection.FindText sOne, dsMatchRegExp
+
+if 1 = 1 then
+sOne = oDoc.Selection
+sTwo = Replace(sOne, ",", ", ")
+oDoc.Selection.CharRight
+oDoc.Selection.WordRight dsExtend
+'увеличиваем номер на единицу
+sBuild = oDoc.Selection + 1
+'замен€ем
+oDoc.Selection = sBuild
+else 'не нашли....
+msgbox "»нформаци€ о версии не найдена"
+oDoc.Close dsSaveChangesNo
+set oDoc = nothing
+exit sub
+end if
+
+for iSelect = 2 to 4
+if iSelect = 2 then
+bFound = oDoc.Selection.FindText(sOne)
+else
+bFound = oDoc.Selection.FindText(sTwo)
+end if
+oDoc.Selection.CharRight
+oDoc.Selection.WordRight dsExtend
+oDoc.Selection = sBuild
+if bFound = False then
+msgbox "Version number " & iSelect & " not found. Closing without changes."
+oDoc.Close dsSaveChangesNo
+set oDoc = nothing
+exit sub
+end if
+next
+
+'сохранить и закрыть *.rc2
+oDoc.Close dsSaveChangesYes
+set oDoc = nothing
+End Sub 

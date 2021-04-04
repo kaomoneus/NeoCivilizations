@@ -1,0 +1,7 @@
+GameProject.src/Release
+GameProject.src/Release/*
+GameProject.src/Release/**
+
+GameProject.src/Debug
+GameProject.src/Debug/*
+GameProject.src/Debug/**
