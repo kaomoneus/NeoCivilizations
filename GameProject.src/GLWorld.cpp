@@ -420,22 +420,6 @@ void TGLWorld::LoadObjects()
  mesh_t* Mesh;
  int num_obj = 0;
 
-/* CLoad3DS a;
-
- t3DModel *Model;
-
- a.Import3DS(Model, "Models/1.3ds");
-
-	for(int i = 0; i < Model->numOfObjects; i++)
-	{
-		// Free the faces, normals, vertices, and texture coordinates.
-		delete [] Model->pObject[i].pFaces;
-		delete [] Model->pObject[i].pNormals;
-		delete [] Model->pObject[i].pVerts;
-		delete [] Model->pObject[i].pTexVerts;
-	}
-*/
-
  int num_vertex;
 
  for (int n = 0; n < MAX_MODELS; n++)
@@ -455,9 +439,7 @@ void TGLWorld::LoadObjects()
 		strcat(fol,buf); 
         strcat(fol,Society->Standart[n].FileName);
 		Models[n].Frames[a][f].ModelFileName = strcat(fol, ".3ds");
-   
-   
-//
+
    Mesh = Load3DS(Models[n].Frames[a][f].ModelFileName,&num_vertex);
 
 
@@ -469,7 +451,6 @@ void TGLWorld::LoadObjects()
 	glEnable(GL_LIGHTING);
 //	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_COLOR_MATERIAL);
-
   	glTranslated(Models[n].StartPos.X*Models[n].Scale.X,
 		         Models[n].StartPos.Y*Models[n].Scale.Y,
 				 Models[n].StartPos.Z*Models[n].Scale.Z);
@@ -491,7 +472,7 @@ void TGLWorld::LoadObjects()
 //	    if(!Models[n].Frames[a][f].Parts[k].ColorEnabled) glColor3f(1,1,1);
 
 //	    glBindTexture(GL_TEXTURE_2D, ModelTextures[Models[n].Frames[a][f].Parts[k].TexId]);
-
+        
 		for (int i = 0; i < Mesh->trimesh[k].num_uvmap; i++)
 		{
 			Mesh->trimesh[k].uvmap[i].u = Mesh->trimesh[k].vertex[i].x*0.001;
@@ -515,11 +496,30 @@ void TGLWorld::LoadObjects()
 //		glPopAttrib();
 
 	}
-	free(Mesh);
+   
+   for(int k = 0; k < Mesh->num_trimesh; k++)
+   {
+	   trimesh_t &trimesh = Mesh->trimesh[k];
+	   
+	   if (trimesh.vertex)
+	       free(trimesh.vertex);
+
+	   if (trimesh.uvmap)
+	       free(trimesh.uvmap);
+	   
+	   if (trimesh.smoothgroup)
+	       free(trimesh.smoothgroup);
+	   
+	   if (trimesh.normal)
+	       free(trimesh.normal);
+   }
+
+   free(Mesh->trimesh);
+   free(Mesh);
+   
    glPopMatrix();
    glEndList();
   }
-
 }; 
 
 /*void TGLWorld::BuildLandTextures()

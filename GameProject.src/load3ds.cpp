@@ -863,8 +863,6 @@ void create_mesh(mesh_t *mesh,int *num_vertex) {
 		*num_vertex += mesh->trimesh[i].num_face;
 	}
 	*num_vertex *= 3;
-	vertex = (float*)malloc(sizeof(float) * *num_vertex * 8);
-
 }
 
 

@@ -1,4 +1,4 @@
-const int FILE_NAME_LENGTH = 8;
+const int FILE_NAME_LENGTH = 256;
 
 
 const int MAX_FRAMES = 30;

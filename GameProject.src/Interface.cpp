@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "GLWorld.h"
 //#include "xImage.h"
+#include <vector>
 
 int f;
 //________________________________________________________________________________________________
@@ -368,7 +369,8 @@ inline	void Set(T_RGBA &P,
 
 void TMiniMap::Init()
 {
-unsigned char* M = new unsigned char[MAP_WIDTH*MAP_HEIGHT*4];
+std::vector<unsigned char> M(MAP_WIDTH*MAP_HEIGHT*4);
+
 //  unsigned char M[MAP_WIDTH*MAP_HEIGHT*4];
 /*	for(int x = 0; x < MAP_WIDTH; x++)
 		for(int y = 0; y < MAP_HEIGHT; y++)
@@ -383,7 +385,6 @@ int i = 0;
 for(int x = 0; x < MAP_WIDTH; x++)
  for(int y = 0; y < MAP_HEIGHT; y++)
  {
-	 i+=4;
 	 if(World->Society->MAP[y][x].Z < 3)
 	 {
 	  M[i] = 100;
@@ -398,7 +399,7 @@ for(int x = 0; x < MAP_WIDTH; x++)
 	  M[i+2] = 100;
 	  M[i+3] = 150;
 	 }
-
+     i += 4;
  }
 
 /*  unsigned char TexMap[256][256][4];
@@ -419,12 +420,9 @@ for(int x = 0; x < MAP_WIDTH; x++)
   glGenTextures(1, &Map);                                        
   glBindTexture(GL_TEXTURE_2D, Map);
 //  glTexImage2D(GL_TEXTURE_2D, 0, 4, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, &TexMap[0][0][0]);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)MAP_WIDTH, (int)MAP_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, M);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)MAP_WIDTH, (int)MAP_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, &M.front());
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-  delete [] M;
-
 }
 
 /*
